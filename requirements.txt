@@ -1,0 +1,7 @@
+pandas
+sqlalchemy
+beautifulsoup4
+requests
+selenium
+lxml
+pymysql
