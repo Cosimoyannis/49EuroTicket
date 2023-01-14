@@ -5,3 +5,4 @@ requests
 selenium
 lxml
 pymysql
+tweepy
