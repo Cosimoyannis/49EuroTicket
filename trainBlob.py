@@ -5,6 +5,9 @@ import numpy as np
 import random
 import re
 
+
+# ------------ textblob model wird trainiert
+
 train = [
     #pos
     ('Ja gut, man kann es ohnehin Niemanden Recht machen mit dieser Lösung.In wenigen individuellen Fällen ist das 49 Euroticket halt teuer. Wer die etwas weitere Lösung also nicht braucht, muss dieses ja auch nicht kaufen. Der Mehrheit aller Pendler und übrigen Menschen bringt dieses Ticket auf jeden Fall etwas.', 'pos'),
@@ -17,61 +20,22 @@ train = [
     ('@Juliz 49 ist aber vielen trotzdem zu viel', 'neg'),
     ('Das Ticket umfasst sämtlichen Regional Verkehr egal ob bus, bahn, ubahn, ...Nur keinen Fernverkehr und wahrscheinlich auch keine Sonderzüge also ich mein die Firmen die Historische Schmalspurstrecken mit Dampflok betreiben.', 'neg'),
     ('49€ Ticket ist einfach lose lose, zu teuer als das es eine Mehrheit einfach kauft weil es ja so günstig ist und die Verkehrsbetriebe haben massive Einnahmeeinbußen durch den Wegfall der teureren Abotickets.', 'neg'),
-    ('Nicht gut. Nur digital, nur im Abo, und zu teuer. Hat nicht wirklich viel mit dem 9 Euro Ticket gemeinsam. Und so wundert es nicht, dass Experten sagen, dass es die Inflation kaum beeinflussen wird', 'neg')
+    ('Nicht gut. Nur digital, nur im Abo, und zu teuer. Hat nicht wirklich viel mit dem 9 Euro Ticket gemeinsam. Und so wundert es nicht, dass Experten sagen, dass es die Inflation kaum beeinflussen wird', 'neg'),
 
     #pos
-    ('Das ist übertrieben praktisch', 'pos'),
-    ('Das ist unnormal cool', 'pos'),
-    ('', 'pos'),
-    ('', 'pos'),
-    ('', 'pos'),
+    ('@Soren_Meyer14 Ja das stimmt. Das #9EuroTicket war ein Traum. Aber das #49EuroTicket/#Deutschlandticket ist ein erster Schritt in die richtige Richtung. Klar ist: Mehr Geld in den ÖPNV und Zugverkehr.', 'pos'),
+    ('Das 49€ Ticket ist super. Es ist unkompliziert, billiger und bringt frischen Wind in den ÖPNV. Aber wie nennt ihr das Ticket? #49EuroTicket oder #Deutschlandticket?', 'pos'),
+    ('Herr @Wissing die Menschen haben das #9euroticket geliebt, und nicht die @fdp! 😉 #Maischberger', 'pos'),
+    ('Good News zum #HVV-Jobticket: Mit Einführung des #49EuroTicket werden alle Tickets auf max. 49€ gesenkt und darauf kommt der volle Arbeitgeberzuschuss. Wer so eine Karte hat, zahlt also nur ca. 34€ für die Deutschland-Flat. Details hier: https://t.co/mvLpUbhRRP #hamburg #bahn https://t.co/KS9zsqB2jG', 'pos'),
+    ('Erfolgsprojekt 9-Euro-Ticket: DVB mit Rekorden im vergangenen Sommer. #Dresden #DVB #Rekord #9EuroTicket #Fahrgastzahlen #Stadtbahn #Bus #ÖPNV https://t.co/FRjTZUPedG', 'pos'),
     #neg
-    ('', 'neg'),
-    ('', 'neg'),
-    ('', 'neg'),
-    ('', 'neg'),
-    ('', 'neg'),
+    ('Alles scheiß Betrüger', 'neg'),
+    ('Wisst Ihr noch, diese Idee vom deutschlandweit gültigen #49EuroTicket? Schäm mich bisschen, dass ich ‘ne Weile echt dran geglaubt habe.', 'neg'),
+    ('Bevor das #49EuroTicket eingeführt wird, erhöht der Augsburger Verkehrs- und Tarifverbund erstmal das Monats-Abo von 104 € auf 114,50 € pro Monat.', 'neg'),
+    ('Ihr könnt mir hier erzählen was ihr wollt, aber der Nachfolger des #9euroticket wird ein Reinfall. #Deutschlandticket #Maischberger @Wissing https://t.co/uql89Gkg8k', 'neg'),
+    ('grausame Idee', 'neg'),
+    ('Natürlich verarschen die #Politiker und die #Bahn-Vorstände die #Kunden, die #Bürger... Nach dem Beschwichtigungs-#9euroticket sollte das #49EuroTicket kommen. Dann wurde es in #DeutschlandTicket umgetauft... Logisch, dass es stets teurer werden wird. https://t.co/wikSvFbGlF', 'neg')
 
-
-     #pos
-    ('', 'pos'),
-    ('', 'pos'),
-    ('', 'pos'),
-    ('', 'pos'),
-    ("", 'pos'),
-    #neg
-    ('', 'neg'),
-    ('', 'neg'),
-    ('', 'neg'),
-    ('', 'neg'),
-    ('', 'neg'),
-
-
-     #pos
-    ('', 'pos'),
-    ('', 'pos'),
-    ('', 'pos'),
-    ('', 'pos'),
-    ("", 'pos'),
-    #neg
-    ('', 'neg'),
-    ('', 'neg'),
-    ('', 'neg'),
-    ('', 'neg'),
-    ('', 'neg'),
-
-     #pos
-    ('', 'pos'),
-    ('', 'pos'),
-    ('', 'pos'),
-    ('', 'pos'),
-    ("", 'pos'),
-    #neg
-    ('', 'neg'),
-    ('', 'neg'),
-    ('', 'neg'),
-    ('', 'neg'),
-    ('', 'neg')
 
 ]
 test = [
@@ -80,7 +44,13 @@ test = [
     ("49€Euro Ticket ist eine reine Provokoation hätte da lieber 58 bezahlt", 'neg'),
     ("Klingt gut - allein als Student in Raum Erlangen/Nürnberg wäre es zu gebrauchen da das Semesterticket absolut zu nichts zu gebrauchen ist", 'pos'),
     ('49 € sind top', 'pos'),
-    ("Für mich sind 49 € auch keine Option. So oft fahre ich nicht mit dem ÖPNV. Meist bin ich doch eher auf das Auto angewiesen.", 'neg')
+    ("Für mich sind 49 € auch keine Option. So oft fahre ich nicht mit dem ÖPNV. Meist bin ich doch eher auf das Auto angewiesen.", 'neg'),
+    ('Das Ticket ist einer absoluter Erfolg', 'pos'),
+    ('Man stelle sich vor 50 Leute, die im teuren Auto im Stau stehen, würden stattdessen für 9 € mtl im Bus sitzen und zügig voran kommen Wäre möglich, wenn der ÖPNV ausgebaut, das erfolgreiche #9euroticket eingeführt und die Leute ihre Autos abschaffen würden https://t.co/hbG2pB9Qcs', 'pos'),
+    ('na dann, zack zack, da wäre der 1.2.2023 locker schaffbar #49EuroTicket #Deutschlandticket #9EuroTicket https://t.co/BJlrDhUfE9', 'pos'),
+    ('Für mich nicht finanzierbar. #49euroticket #Deutschlandticket', 'neg'),
+    ('Bringt gar nichts!', 'neg'),
+    ('Ich kann gar nicht sagen, an wie vielen Dingen die #FDPmachtkrankundarm (teils seit Jahrzehnten) festklebt, obwohl diese nachweislich Unfug sind…', 'neg')
 ]
 
 cl = NaiveBayesClassifier(train)
@@ -89,15 +59,12 @@ cl = NaiveBayesClassifier(train)
 print(cl.classify("Mir gefällt das 49 ticket übertrieben gut"))  # "pos"
 print(cl.classify("Das Ticket ist super unnötig"))   # "neg"
 
-""" # Classify a TextBlob
-blob = TextBlob("Das ticket ist absolut nicht zu gebrauchen.", classifier=cl)
-print(blob)
-print(blob.classify()) """
 
 
 
 
-# ------------
+
+# ------------ CSV wird mit sentiment analysiert
 
 data = pd.read_csv('YoutubeComments.csv', on_bad_lines='skip')
 
@@ -116,26 +83,29 @@ while (count < 5):
     blob = TextBlob(textStringRegexTwo, classifier=cl)
     sentiment = blob.sentiment.polarity 
 
-
+    print(" ") 
     print("----------------")
+    print(" ") 
     print(textStringRegexTwo)
-    print(sentiment)
+    # print(sentiment)
 
-    print(blob)
+    # print(blob)
     print(blob.classify())
+
+    # for sentence in blob.sentences:
+       # print(sentence)
+       # print(sentence.classify())
+
+    # Compute accuracy
+       # print("Accuracy: {0}".format(cl.accuracy(test)))
+
+    # Show 5 most informative features
+    #cl.show_informative_features(5)
    
     count = count + 1
 
 else: 
+    print(" ") 
     print("----------------")
+    print(" ") 
 
-
-for sentence in blob.sentences:
-    print(sentence)
-    print(sentence.classify())
-
-# Compute accuracy
-print("Accuracy: {0}".format(cl.accuracy(test)))
-
-# Show 5 most informative features
-cl.show_informative_features(5)
