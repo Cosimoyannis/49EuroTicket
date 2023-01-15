@@ -30,10 +30,12 @@ train = [
     ('Erfolgsprojekt 9-Euro-Ticket: DVB mit Rekorden im vergangenen Sommer. #Dresden #DVB #Rekord #9EuroTicket #Fahrgastzahlen #Stadtbahn #Bus #ÖPNV https://t.co/FRjTZUPedG', 'pos'),
     #neg
     ('Alles scheiß Betrüger', 'neg'),
+    ('Das Ticket ist super unnötig', 'neg'),
     ('Wisst Ihr noch, diese Idee vom deutschlandweit gültigen #49EuroTicket? Schäm mich bisschen, dass ich ‘ne Weile echt dran geglaubt habe.', 'neg'),
     ('Bevor das #49EuroTicket eingeführt wird, erhöht der Augsburger Verkehrs- und Tarifverbund erstmal das Monats-Abo von 104 € auf 114,50 € pro Monat.', 'neg'),
     ('Ihr könnt mir hier erzählen was ihr wollt, aber der Nachfolger des #9euroticket wird ein Reinfall. #Deutschlandticket #Maischberger @Wissing https://t.co/uql89Gkg8k', 'neg'),
     ('grausame Idee', 'neg'),
+    ('Mir gefällt das 49 ticket übertrieben gut', 'pos'),
     ('Natürlich verarschen die #Politiker und die #Bahn-Vorstände die #Kunden, die #Bürger... Nach dem Beschwichtigungs-#9euroticket sollte das #49EuroTicket kommen. Dann wurde es in #DeutschlandTicket umgetauft... Logisch, dass es stets teurer werden wird. https://t.co/wikSvFbGlF', 'neg')
 
 
@@ -55,9 +57,9 @@ test = [
 
 cl = NaiveBayesClassifier(train)
 
-# Classify some text
-print(cl.classify("Mir gefällt das 49 ticket übertrieben gut"))  # "pos"
-print(cl.classify("Das Ticket ist super unnötig"))   # "neg"
+# Test - Classify some text
+# print(cl.classify("Mir gefällt das 49 ticket übertrieben gut"))  # "pos"
+# print(cl.classify("Das Ticket ist super unnötig"))   # "neg"
 
 
 
